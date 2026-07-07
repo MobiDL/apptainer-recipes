@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get update -y && apt-get install -y \
+        g++ \
+        make \
+        wget \
+        bzip2 \
+        tar \
+        git
+    wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.3/bwa-mem2-2.3_x64-linux.tar.bz2 
+    tar jxf bwa-mem2-2.3_x64-linux.tar.bz2
+
+%environment
+    export PATH=/bwa-mem2-2.3_x64-linux:$PATH
+
+%runscript
+    exec bwa-mem2 "$@"

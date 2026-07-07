@@ -9,7 +9,8 @@ This repository hosts **production-ready Apptainer container recipes** for bioin
 | Tool       | Version | Description                                     | Recipe File    |
 | ---------- | ------- | ----------------------------------------------- | -------------- |
 | `bwa`      | 0.7.19  | Burrow-Wheeler Aligner for short-read alignment | `bwa.def`      |
-| `fastp`    | 1.3.6   | Fastq pre-processing tool             | `fastp.def`    |
+| `bwa-mem2` | 2.3     | The next version of bwa-mem                     | `bwa-mem2.def` |
+| `fastp`    | 1.3.6   | Fastq pre-processing tool                       | `fastp.def`    |
 
 ## 🚀 Quick Start
 
