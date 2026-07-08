@@ -34,10 +34,34 @@ apptainer build container_VERSION.sif recipe.def
 ### 3. Run the Container
 
 ```bash
-apptainer run container_VERSION.sif [command]
+apptainer exec container_VERSION.sif [command]
 ```
 
----
+### 4. Use into WDL workflow
+
+Use these container inside WDL workflow need a configuration backend file : [see our recommendation here](https://github.com/MobiDL/backends.conf)
+
+A minimal runtime configuration will be needed for a task, as exemple : 
+
+```WDL
+task tool {
+    input {
+        File input
+    }
+
+    command {
+        tool cmd
+    }
+
+    output {
+        File out = tool.out
+    }
+    
+    runtime {
+        docker: 'tool:VERSION'
+    }
+}
+```
 
 ## 📜 Best Practices
 
