@@ -37,32 +37,6 @@ apptainer build container_VERSION.sif recipe.def
 apptainer exec container_VERSION.sif [command]
 ```
 
-### 4. Use into WDL workflow
-
-Use these container inside WDL workflow need a configuration backend file : [see our recommendation here](https://github.com/MobiDL/backends.conf)
-
-A minimal runtime configuration will be needed for a task, as exemple : 
-
-```WDL
-task tool {
-    input {
-        File input
-    }
-
-    command {
-        tool cmd
-    }
-
-    output {
-        File out = tool.out
-    }
-    
-    runtime {
-        docker: 'tool:VERSION'
-    }
-}
-```
-
 ## 📜 Best Practices
 
 ### Container Design
@@ -85,6 +59,29 @@ task tool {
   ```bash
   export SINGULARITY_CACHEDIR=/scratch/.singularity/cache
   ```
+
+### Use into WDL workflow
+
+```WDL
+task tool {
+    input {
+        File input
+    }
+
+    command {
+        tool cmd
+    }
+
+    output {
+        File out = tool.out
+    }
+    
+    runtime {
+        docker: 'tool:VERSION'
+    }
+}
+```
+___⚠️ Use these containers inside WDL workflow need a configuration backend file : [see our recommendation here](https://github.com/MobiDL/backends.conf)___
 
 ## 🤝 Contributing
 
