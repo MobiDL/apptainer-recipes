@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get update -y && apt-get install -y \
+        g++ \
+        make \
+        python3 \
+        wget \
+        ldc \
+        libz-dev \
+        liblz4-dev \
+        pkg-config \
+        cmake \
+        meson \
+        ninja-build \
+        tar \
+        git
+    git clone --recursive --branch v1.0.1 https://github.com/biod/sambamba
+    cd sambamba
+    meson build
+    cd build
+    ninja
+    ninja test
+    cp sambamba /usr/local/bin/
+    cd ../
+    rm -rf sambamba
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    exec sambamba "$@"
