@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get update -y && apt-get install -y \
+        g++ \
+        make \
+        zlib1g-dev \
+        git
+    git clone --branch v0.3 https://github.com/lh3/minibwa
+    cd minibwa
+    make
+    mv minibwa /usr/local/bin
+    cd ..
+    rm -rf minibwa
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    exec minibwa "$@"
