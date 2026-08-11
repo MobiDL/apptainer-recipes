@@ -6,16 +6,17 @@ This repository hosts **production-ready Apptainer container recipes** for bioin
 
 ## 📦 Available Containers
 
-| Tool       | Version | Description                                           | Recipe File    |
-| ---------- | ------- | ----------------------------------------------------- | -------------- |
-| `bedtools` | 2.31.1  | bedtools - the swiss army knife for genome arithmetic | `bedtools.def` |
-| `bwa`      | 0.7.19  | Burrow-Wheeler Aligner for short-read alignment       | `bwa.def`      |
-| `bwa-mem2` | 2.3     | The next version of bwa-mem                           | `bwa-mem2.def` |
-| `fastp`    | 1.3.6   | Fastq pre-processing tool                             | `fastp.def`    |
-| `GATK4`    | 4.6.2.0 | The Genome Analysis ToolKit 4                         | `GATK4.def`    |
-| `minibwa`  | 0.3     | Successor of bwa-mem for short-read alignment         | `minibwa.def`  |
-| `sambamba` | 1.0.1   | Tools for working with SAM/BAM data                   | `sambamba.def` |
-| `samtools` | 1.23.1  | mpileup and other tools for handling SAM, BAM, CRAM   | `samtools.def` |
+| Tool       | Version | Description                                                   | Recipe File    |
+| ---------- | ------- | ------------------------------------------------------------- | -------------- |
+| `bedtools` | 2.31.1  | The swiss army knife for genome arithmetic                    | `bedtools.def` |
+| `bcftools` | 1.23.1  | Utilities for variant calling and manipulating VCFs and BCFs. | `bcftools.def` |
+| `bwa`      | 0.7.19  | Burrow-Wheeler Aligner for short-read alignment               | `bwa.def`      |
+| `bwa-mem2` | 2.3     | The next version of bwa-mem                                   | `bwa-mem2.def` |
+| `fastp`    | 1.3.6   | Fastq pre-processing tool                                     | `fastp.def`    |
+| `GATK4`    | 4.6.2.0 | The Genome Analysis ToolKit 4                                 | `GATK4.def`    |
+| `minibwa`  | 0.3     | Successor of bwa-mem for short-read alignment                 | `minibwa.def`  |
+| `sambamba` | 1.0.1   | Tools for working with SAM/BAM data                           | `sambamba.def` |
+| `samtools` | 1.23.1  | mpileup and other tools for handling SAM, BAM, CRAM           | `samtools.def` |
 
 ## 🚀 Quick Start
 
