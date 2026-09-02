@@ -11,10 +11,6 @@ From: broadinstitute/gatk:4.6.2.0
         openjdk-11-jdk \
         && rm -rf /var/lib/apt/lists/*
 
-    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-    export PATH=$JAVA_HOME/bin:$PATH
-
-
 %environment
     export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
     export PATH=$JAVA_HOME/bin:$PATH
