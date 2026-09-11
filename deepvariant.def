@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: google/deepvariant:1.9.0
+
+%post
+    apt-get update -y && apt-get install -y --no-install-recommends 
+    ln -s /opt/deepvariant/bin/run_deepvariant  /opt/deepvariant/bin/deepvariant 
+
+%environment
+    export PATH=/opt/deepvariant/bin:$PATH
+
+%runscript
+    exec deepvariant "$@"
