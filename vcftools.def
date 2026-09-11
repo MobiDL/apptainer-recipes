@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get update -y && apt-get install -y \
+        g++ \
+        wget \
+        openssl \
+        bzip2 \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-openssl-dev \
+        libncurses-dev \
+        libssl-dev \
+        tar \
+        gcc make autoconf automake pkg-config zlib1g-dev curl \
+        git
+
+    git clone --depth=1 --branch v0.1.17 https://github.com/vcftools/vcftools
+    cd vcftools/
+    ./autogen.sh
+    ./configure
+    make
+    make install
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    exec vcftools "$@"

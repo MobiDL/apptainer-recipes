@@ -19,6 +19,7 @@ This repository hosts **production-ready Apptainer container recipes** for bioin
 | `minibwa`     | 0.3        | Successor of bwa-mem for short-read alignment                              | `minibwa.def`     |
 | `sambamba`    | 1.0.1      | Tools for working with SAM/BAM data                                        | `sambamba.def`    |
 | `samtools`    | 1.23.1     | mpileup and other tools for handling SAM, BAM, CRAM                        | `samtools.def`    |
+| `vcftools`    | 0.1.17     | A set of tools written in Perl and C++ for working with VCF files          | `vcftools.def`    |
 
 ## 🚀 Quick Start
 
