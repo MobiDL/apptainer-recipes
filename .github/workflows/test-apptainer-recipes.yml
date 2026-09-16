@@ -1,0 +1,89 @@
+name: Test Apptainer Recipes
+
+on:
+  push:
+    paths:
+      - '**.def'  # Déclenche uniquement si un .def est modifié
+  pull_request:
+    paths:
+      - '**.def'
+
+jobs:
+  test-recipes:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Continue même si un test échoue
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Nécessaire pour git diff
+
+      - name: Install Apptainer and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apptainer jq
+
+      - name: Get list of changed .def files
+        id: changed-files
+        run: |
+          # Récupère les fichiers .def modifiés dans le dernier commit
+          FILES=$(git diff --name-only --diff-filter=ACM ${{ github.event.before }} ${{ github.sha }} | grep '\.def$' | tr '\n' ' ')
+          echo "Changed .def files: $FILES"
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+
+      - name: Build and test each recipe
+        run: |
+          # Initialise le rapport
+          echo "# Test Results for Apptainer Recipes" > test_results.md
+          echo "Date: $(date)" >> test_results.md
+          echo "" >> test_results.md
+
+          # Boucle sur chaque fichier .def modifié
+          for file in ${{ steps.changed-files.outputs.files }}; do
+            echo "Processing $file..."
+
+            # Extrait le nom de l'outil (ex: "bwa" pour "bwa/bwa.def")
+            tool_name=$(basename "$file" .def)
+            container_name="${tool_name}.sif"
+
+            # Affiche dans le rapport
+            echo "## $tool_name ($file)" >> test_results.md
+            echo "" >> test_results.md
+
+            # 1. Construit le conteneur
+            echo "- Building container..." >> test_results.md
+            if apptainer build --fakeroot "$container_name" "$file" 2>> test_results.md; then
+              echo "  ✅ **Build succeeded**" >> test_results.md
+            else
+              echo "  ❌ **Build failed**" >> test_results.md
+              rm -f "$container_name"
+              continue
+            fi
+
+            # 2. Teste la commande de version
+            echo "- Testing command..." >> test_results.md
+            # Essaie plusieurs commandes possibles (--version, -v, --help)
+            if apptainer run "$container_name" "$tool_name" --version >> test_results.md 2>&1; then
+              echo "  ✅ **Command `${tool_name} --version` succeeded**" >> test_results.md
+            elif apptainer run "$container_name" "$tool_name" -v >> test_results.md 2>&1; then
+              echo "  ✅ **Command `${tool_name} -v` succeeded**" >> test_results.md
+            elif apptainer run "$container_name" "$tool_name" --help >> test_results.md 2>&1 | head -n 1; then
+              echo "  ✅ **Command `${tool_name} --help` succeeded**" >> test_results.md
+            else
+              echo "  ❌ **No version command found for `${tool_name}`**" >> test_results.md
+            fi
+
+            # Nettoyage
+            rm -f "$container_name"
+            echo "" >> test_results.md
+          done
+
+          # Affiche le rapport dans les logs
+          cat test_results.md
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()  # Upload même en cas d'échec
+        with:
+          name: apptainer-test-results
+          path: test_results.md
