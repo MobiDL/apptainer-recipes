@@ -3,21 +3,26 @@ name: Test Apptainer Recipes
 on:
   push:
     paths:
-      - '**.def'  # Déclenche uniquement si un .def est modifié
+      - '**.def'
+    branches:
+      - dev  # Se déclenche uniquement sur les pushes vers la branche `dev`
   pull_request:
     paths:
       - '**.def'
-  workflow_dispatch:
+    branches:
+      - dev  # Se déclenche uniquement sur les PR vers la branche `dev`
+  workflow_dispatch:  # Permet de lancer manuellement depuis l'UI GitHub
 
 jobs:
   test-recipes:
     runs-on: ubuntu-latest
-    continue-on-error: true  # Continue même si un test échoue
+    continue-on-error: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Nécessaire pour git diff
+          fetch-depth: 0
+          ref: dev  # Explicite : utilise la branche `dev`
 
       - name: Install Apptainer and dependencies
         run: |
@@ -27,31 +32,32 @@ jobs:
       - name: Get list of changed .def files
         id: changed-files
         run: |
-          # Récupère les fichiers .def modifiés dans le dernier commit
-          FILES=$(git diff --name-only --diff-filter=ACM ${{ github.event.before }} ${{ github.sha }} | grep '\.def$' | tr '\n' ' ')
-          echo "Changed .def files: $FILES"
+          # Si déclenché manuellement (workflow_dispatch), teste TOUS les .def
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            FILES=$(find . -name "*.def" -type f | tr '\n' ' ')
+          else
+            # Sinon, teste uniquement les fichiers modifiés
+            FILES=$(git diff --name-only --diff-filter=ACM ${{ github.event.before }} ${{ github.sha }} | grep '\.def$' | tr '\n' ' ')
+          fi
+          echo "Files to test: $FILES"
           echo "files=$FILES" >> $GITHUB_OUTPUT
 
       - name: Build and test each recipe
         run: |
-          # Initialise le rapport
           echo "# Test Results for Apptainer Recipes" > test_results.md
           echo "Date: $(date)" >> test_results.md
+          echo "Branch: ${{ github.ref_name }}" >> test_results.md
           echo "" >> test_results.md
 
-          # Boucle sur chaque fichier .def modifié
           for file in ${{ steps.changed-files.outputs.files }}; do
             echo "Processing $file..."
-
-            # Extrait le nom de l'outil (ex: "bwa" pour "bwa/bwa.def")
             tool_name=$(basename "$file" .def)
             container_name="${tool_name}.sif"
 
-            # Affiche dans le rapport
             echo "## $tool_name ($file)" >> test_results.md
             echo "" >> test_results.md
 
-            # 1. Construit le conteneur
+            # Construction
             echo "- Building container..." >> test_results.md
             if apptainer build --fakeroot "$container_name" "$file" 2>> test_results.md; then
               echo "  ✅ **Build succeeded**" >> test_results.md
@@ -61,9 +67,8 @@ jobs:
               continue
             fi
 
-            # 2. Teste la commande de version
+            # Test de commande
             echo "- Testing command..." >> test_results.md
-            # Essaie plusieurs commandes possibles (--version, -v, --help)
             if apptainer run "$container_name" "$tool_name" --version >> test_results.md 2>&1; then
               echo "  ✅ **Command `${tool_name} --version` succeeded**" >> test_results.md
             elif apptainer run "$container_name" "$tool_name" -v >> test_results.md 2>&1; then
@@ -74,17 +79,15 @@ jobs:
               echo "  ❌ **No version command found for `${tool_name}`**" >> test_results.md
             fi
 
-            # Nettoyage
             rm -f "$container_name"
             echo "" >> test_results.md
           done
 
-          # Affiche le rapport dans les logs
           cat test_results.md
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
-        if: always()  # Upload même en cas d'échec
+        if: always()
         with:
           name: apptainer-test-results
           path: test_results.md
