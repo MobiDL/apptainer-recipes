@@ -12,6 +12,7 @@ This repository hosts **production-ready Apptainer container recipes** for bioin
 | `bcftools`    | 1.23.1     | Utilities for variant calling and manipulating VCFs and BCFs.              | `bcftools.def`    |
 | `bwa`         | 0.7.19     | Burrow-Wheeler Aligner for short-read alignment                            | `bwa.def`         |
 | `bwa-mem2`    | 2.3        | The next version of bwa-mem                                                | `bwa-mem2.def`    |
+| `deepsomatic` | 1.9.0      | Analysis pipeline that uses a deep neural network to call somatic variants | `deepsomatic.def` |
 | `deepvariant` | 1.9.0      | Analysis pipeline that uses a deep neural network to call genetic variants | `deepvariant.def` |
 | `fastp`       | 1.3.6      | Fastq pre-processing tool                                                  | `fastp.def`       |
 | `jvarkit`     | 2026.04.30 | Java utilities for Bioinformatics                                          | `jvarkit.def`     |
