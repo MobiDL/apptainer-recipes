@@ -17,7 +17,7 @@ This repository hosts **production-ready Apptainer container recipes** for bioin
 | `fastp`       | 1.3.6      | Fastq pre-processing tool                                                  | `fastp.def`       |
 | `jvarkit`     | 2026.04.30 | Java utilities for Bioinformatics                                          | `jvarkit.def`     |
 | `GATK4`       | 4.6.2.0    | The Genome Analysis ToolKit 4                                              | `GATK4.def`       |
-| `minibwa`     | 0.3        | Successor of bwa-mem for short-read alignment                              | `minibwa.def`     |
+| `minibwa`     | 0.7        | Successor of bwa-mem for short-read alignment                              | `minibwa.def`     |
 | `sambamba`    | 1.0.1      | Tools for working with SAM/BAM data                                        | `sambamba.def`    |
 | `samtools`    | 1.23.1     | mpileup and other tools for handling SAM, BAM, CRAM                        | `samtools.def`    |
 | `vcftools`    | 0.1.17     | A set of tools written in Perl and C++ for working with VCF files          | `vcftools.def`    |
