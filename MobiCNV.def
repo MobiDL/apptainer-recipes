@@ -12,12 +12,11 @@ From: mambaorg/micromamba:2.9.0-alpine3.22
 
   # Install package itself
   # Clone it into 'share' so that can access main script
-  micromamba run -n base git clone https://github.com/mobidic/MobiCNV.git $MAMBA_ROOT_PREFIX/share/MobiCNV
-  cd $MAMBA_ROOT_PREFIX/share/MobiCNV
+  micromamba run -n base git clone --branch v1.3 --single-branch --depth 1 https://github.com/mobidic/MobiCNV.git $MAMBA_ROOT_PREFIX/share/MobiCNV
   micromamba install -n base --yes -f $MAMBA_ROOT_PREFIX/share/MobiCNV/environment.yml > /dev/null 2>&1  
 
   # Add exe to PATH
-  cp MobiCNV.py $MAMBA_ROOT_PREFIX/bin
+  cp $MAMBA_ROOT_PREFIX/share/MobiCNV/MobiCNV.py $MAMBA_ROOT_PREFIX/bin
 
   micromamba clean --yes --all
 
