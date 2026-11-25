@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: mambaorg/micromamba:2.9.0-alpine3.22
+
+
+%post
+
+  # Sequera/containers always install https://gitlab.com/procps-ng/procps ???
+  #micromamba install -y -n base conda-forge::procps-ng
+
+  # Install git
+  micromamba install -y -n base conda-forge::git > /dev/null 2>&1
+
+  # Install package itself
+  # Clone it into 'share' so that can access main script
+  micromamba run -n base git clone https://github.com/mobidic/MobiCNV.git $MAMBA_ROOT_PREFIX/share/MobiCNV
+  cd $MAMBA_ROOT_PREFIX/share/MobiCNV
+  micromamba install -n base --yes -f $MAMBA_ROOT_PREFIX/share/MobiCNV/environment.yml > /dev/null 2>&1  
+
+  # Add exe to PATH
+  cp MobiCNV.py $MAMBA_ROOT_PREFIX/bin
+
+  micromamba clean --yes --all
+
+
+%environment
+  export MAMBA_ROOT_PREFIX=/opt/conda
+  export PATH="$MAMBA_ROOT_PREFIX/bin:$PATH"
+
+
+%test  
+  # Smoke test
+  MobiCNV.py --help
+
